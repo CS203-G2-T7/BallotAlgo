@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ignore sensitive user info
+*.csv
+*.xls
+*.xlsx
+*.xlsm
+*.xml
