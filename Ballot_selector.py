@@ -1,8 +1,10 @@
-def ballot_selector(user_dist: dict, num_plots: int, dist_weight: dict) -> set(str):
+def ballot_selector(user_dist: dict, num_plots: int, dist_weight: dict) -> set():
     return ["winner1", "winner2", "... winner(num_plots)"]
 
 
 ballot_selector.__doc__ = "From the user_dist dictionary, the num_plots, and dist_weight, calculate the list of winners."
+
+print(ballot_selector({}, 1, {}))
 
 
 # This function takes in a dictionary of users and their distance from an allotment garden user_dist = {"user1": 20.11, "user2": 3.52, "user3": 1.26}.
