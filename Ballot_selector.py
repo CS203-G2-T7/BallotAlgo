@@ -8,11 +8,7 @@ import random
 
 
 def remove_duplicates(keyset, winner):
-    resultant_list = []
-    for key in keyset:
-        if key != winner:
-            resultant_list.append(key)
-    return resultant_list
+    return [key for key in keyset if key != winner]
 
 
 def ballot_selector(user_dist, num_plots):
