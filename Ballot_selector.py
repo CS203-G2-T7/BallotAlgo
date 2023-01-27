@@ -43,3 +43,5 @@ def ballot_selector(user_dist, num_plots):
         keyset = remove_duplicates(keyset, winner)
 
     return output
+
+#This is the old version. See Ballot_selector_test.py
