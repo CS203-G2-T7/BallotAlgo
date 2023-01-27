@@ -36,6 +36,6 @@ def ballot_selector(user_dist, num_plots, dictionary):
     
     return output
 
-dictionary = {1:9, 2:4, 5:2}
+dictionary = {1:9, 2:4, 5:2} #key is the distance, value is the number of additional tickets to be added
 user_dist = {'a':.4, 'b':6, 'c':4.1, 'd':5.1, 'e':0.9, 'f':1.01, 'g':3.2, 'h':4.99, 'i':5.0, 'j':100}
 print(ballot_selector(user_dist, 5, dictionary))
