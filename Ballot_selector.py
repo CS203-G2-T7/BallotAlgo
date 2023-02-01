@@ -1,18 +1,10 @@
 import random
 
 # key is the distance, value is the number of additional tickets to be added
-dist_weights = {1: 9, 2: 4, 5: 2}
+default_dist_weights = {1: 5, 2: 3, 5: 1}
 
 
-def remove_duplicates(keyset, winner):
-    resultant_list = []
-    for key in keyset:
-        if key != winner:
-            resultant_list.append(key)
-    return resultant_list
-
-
-def ballot_selector(user_dist: dict, num_plots: int, dist_weights: dict = dist_weights):
+def ballot_selector(user_dist: dict, num_plots: int, dist_weights: dict = default_dist_weights):
     keyset_fixed = list(user_dist.keys())
     keyset = list(user_dist.keys())
     dict_keys = list(dist_weights.keys())
@@ -35,10 +27,10 @@ def ballot_selector(user_dist: dict, num_plots: int, dist_weights: dict = dist_w
         winner = keyset[idx]
         # print(winner)
         output.add(winner)
-        keyset = remove_duplicates(keyset, winner)
+        keyset = [k for k in keyset if k != winner]
     return output
 
 
-user_dist = {'a': .4, 'b': 6, 'c': 4.1, 'd': 5.1, 'e': 0.9,
-             'f': 1.01, 'g': 3.2, 'h': 4.99, 'i': 5.0, 'j': 100}
+# user_dist = {'a': .4, 'b': 6, 'c': 4.1, 'd': 5.1, 'e': 0.9,
+#              'f': 1.01, 'g': 3.2, 'h': 4.99, 'i': 5.0, 'j': 100}
 # print(ballot_selector(user_dist, 5, dist_weights))

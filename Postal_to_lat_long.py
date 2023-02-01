@@ -10,22 +10,21 @@ import pandas as pd
 nomi = pgeocode.Nominatim('sg')
 
 
-def postal_to_lat_long(user_postal_code_df: pd.DataFrame) -> pd.DataFrame:
-    lat_col = []
-    long_col = []
+def postal_to_lat_long(df: pd.DataFrame) -> pd.DataFrame:
+    lat_col, long_col = [], []
     print("Getting latitude and longitude...")
 
-    for index, row in user_postal_code_df.iterrows():
+    for index, row in df.iterrows():
         lat, long = get_lat_long(row.get('Postal Code'))
         lat_col.append(lat)
         long_col.append(long)
 
-    user_postal_code_df = user_postal_code_df.assign(
+    df = df.assign(
         Latitude=pd.Series(lat_col, dtype=pd.StringDtype()).values)
-    user_postal_code_df = user_postal_code_df.assign(
+    df = df.assign(
         Longitude=pd.Series(long_col, dtype=pd.StringDtype()).values)
-    # print(user_postal_code_df)
-    return user_postal_code_df
+    # print(df)
+    return df
 
 
 def get_lat_long(postal_code: int) -> tuple:
