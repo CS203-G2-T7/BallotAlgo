@@ -1,8 +1,11 @@
 import random
+import ast
+import os
+from dotenv import load_dotenv
 
 # key is the distance, value is the number of additional tickets to be added
-default_dist_weights = {1: 5, 2: 3, 5: 1}
-
+load_dotenv()
+default_dist_weights = ast.literal_eval(os.environ.get("DEFAULT_DIST_WEIGHTS"))
 
 def ballot_selector(user_dist: dict, num_plots: int, dist_weights: dict = default_dist_weights):
     keyset_fixed = list(user_dist.keys())
@@ -33,4 +36,4 @@ def ballot_selector(user_dist: dict, num_plots: int, dist_weights: dict = defaul
 
 # user_dist = {'a': .4, 'b': 6, 'c': 4.1, 'd': 5.1, 'e': 0.9,
 #              'f': 1.01, 'g': 3.2, 'h': 4.99, 'i': 5.0, 'j': 100}
-# print(ballot_selector(user_dist, 5, dist_weights))
+# print(ballot_selector(user_dist, 5, default_dist_weights))
