@@ -2,12 +2,13 @@
 # The garden coordinates are retrieved from the environment file.
 from math import radians, pow, sin, cos, sqrt, asin
 
-def lat_long_to_distance(garden_lat: float, garden_long: float, add_lat: float, add_long: float) -> float:
-    #radius of earth in KM
-    RADIUS = 6371;
 
-    #converts miles to KM
-    KILOMETER = 1.609344;
+def lat_long_to_distance(garden_lat: float, garden_long: float, add_lat: float, add_long: float) -> float:
+    # radius of earth in KM
+    RADIUS = 6371
+
+    # converts miles to KM
+    KILOMETER = 1.609344
 
     latitude1 = radians(garden_lat)
     longitude1 = radians(garden_long)
@@ -16,16 +17,19 @@ def lat_long_to_distance(garden_lat: float, garden_long: float, add_lat: float, 
 
     c = haversine_formula(latitude1, longitude1, latitude2, longitude2)
 
-    return c * RADIUS * KILOMETER
+    return c * RADIUS
+
 
 def haversine_formula(latitude1, longitude1, latitude2, longitude2):
     dlat = latitude1 - latitude2
     dlon = longitude1 - longitude2
-    print(dlon)
-    print(dlat)
+    # print(dlon)
+    # print(dlat)
 
-    a = pow(sin(dlat / 2), 2) + cos(latitude1) * cos(latitude2) * pow(sin(dlon / 2), 2)
-    print(a)
+    a = pow(sin(dlat / 2), 2) + cos(latitude1) * \
+        cos(latitude2) * pow(sin(dlon / 2), 2)
+    # print(a)
     return 2 * asin(sqrt(a))
 
-print(lat_long_to_distance(1.336080, 103.722980, 1.293020, 103.805720))
+
+# print(lat_long_to_distance(1.336080, 103.722980, 1.293020, 103.805720)) #returns 10

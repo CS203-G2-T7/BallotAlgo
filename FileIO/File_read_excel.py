@@ -7,7 +7,7 @@ load_dotenv()
 # Reads xlsx file and returns a dataframe. May or may not have lat long columns.
 
 
-def read_excel_data_to_dataframe(filename: str = 'Excel/' + os.getenv("FILENAME")) -> pd.DataFrame:
+def read_excel_data_to_dataframe(filename: str) -> pd.DataFrame:
     try:
         return pd.read_excel('Excel/' + filename)
     except FileNotFoundError as e:
