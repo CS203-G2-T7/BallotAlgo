@@ -9,5 +9,16 @@ load_dotenv()
 # Only the lat and long columns added.
 
 
-def write_dataframe_lat_long_to_excel(df: pd.DataFrame) -> None:
+def write_dataframe_to_excel(df: pd.DataFrame, filename: str, sheetname: str = "Sheet1") -> None:
+    with pd.ExcelWriter('Excel/' + filename, if_sheet_exists='replace', mode='a') as writer:
+        workbook = writer.book
+        try:
+            workbook.remove(workbook[sheetname])
+        except:
+            print(
+                f"Worksheet {sheetname} doesn't exist. Creating new worksheet...")
+        finally:
+            print(f"Writing to: {filename}, sheet: {sheetname}")
+            df.to_excel(writer, sheet_name=sheetname,
+                        index=False)
     return

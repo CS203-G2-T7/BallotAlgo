@@ -10,12 +10,12 @@ load_dotenv()
 def read_excel_data_to_dataframe(filename: str = 'Excel/' + os.getenv("FILENAME")) -> pd.DataFrame:
     try:
         return pd.read_excel('Excel/' + filename)
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         print("File not found")
-        print(FileNotFoundError.with_traceback())
+        print(e)
     except Exception as e:
         print("Unknown exception")
-        print(e.with_traceback())
+        print(e)
     return pd.DataFrame({})
 
 
