@@ -10,7 +10,7 @@ load_dotenv()
 
 
 def write_dataframe_to_excel(df: pd.DataFrame, filename: str, sheetname: str = "Sheet1") -> None:
-    with pd.ExcelWriter('Excel/' + filename, if_sheet_exists='replace', mode='a') as writer:
+    with pd.ExcelWriter('/content/gdrive/MyDrive/Colab Notebooks/BallotAlgo/Excel/' + filename, if_sheet_exists='replace', mode='a') as writer:
         workbook = writer.book
         try:
             workbook.remove(workbook[sheetname])
