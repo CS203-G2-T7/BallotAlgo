@@ -15,7 +15,7 @@ GARDEN = os.getenv("GARDEN")
 NUM_PLOTS = os.getenv("NUM_PLOTS")
 DIST_WEIGHTS = ast.literal_eval(os.getenv("DIST_WEIGHTS"))
 
-garden_c_df = read_excel_data_to_dataframe("Garden_coordinates.xlsx")
+garden_c_df = read_excel_data_to_dataframe("Garden_coordinates.csv")
 garden_c = garden_c_df.loc[garden_c_df['Garden'] == GARDEN]
 garden_lat, garden_long = garden_c.iloc[0]['Latitude'], garden_c.iloc[0]['Longitude']
 
@@ -24,7 +24,7 @@ valid_df = raw_df
 
 if raw_df.get('Latitude') is None or raw_df.get('Longitude') is None:
     valid_df = postal_to_lat_long(raw_df)
-    write_dataframe_to_excel(valid_df, FILENAME)
+    write_dataframe_to_excel(valid_df, "lat_long.csv")
 else:
     print("Latitude and longitude already cached.")
 
@@ -46,6 +46,6 @@ for i, w in enumerate(winners):
         0]['Latitude'], w_valid_row.iloc[0]['Longitude']
     winner_df.loc[i] = [w] + [p_code] + [lat] + [long] + [user_dist[w]]
 
-write_dataframe_to_excel(winner_df, FILENAME, "winner")
+write_dataframe_to_excel(winner_df, "output.csv")
 
 print(winner_df)
