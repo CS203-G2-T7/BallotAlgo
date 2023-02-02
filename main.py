@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import ast
 from dotenv import load_dotenv
 
 from FileIO.File_read_excel import read_excel_data_to_dataframe
@@ -11,7 +12,8 @@ from Ballot_selector import ballot_selector
 load_dotenv()
 FILENAME = os.getenv("FILENAME")
 GARDEN = os.getenv("GARDEN")
-
+NUM_PLOTS = os.getenv("NUM_PLOTS")
+DIST_WEIGHTS = ast.literal_eval(os.getenv("DIST_WEIGHTS"))
 
 garden_c_df = read_excel_data_to_dataframe("Garden_coordinates.xlsx")
 garden_c = garden_c_df.loc[garden_c_df['Garden'] == GARDEN]
@@ -28,12 +30,23 @@ else:
     print("Latitude and longitude already cached.")
 
 user_dist: dict = {}
-dist_weights = {1: 10, 2: 5, 5: 1}
 
 for index, row in valid_df.iterrows():
     user_dist[row.get('S/N')] = lat_long_to_distance(garden_lat,
                                                      garden_long, float(row.get('Latitude')), float(row.get('Longitude')))
 
-winners = ballot_selector(user_dist, 5, dist_weights)
-for w in winners:
-    print(f'{w}: {user_dist[w]}')
+winners: list = ballot_selector(user_dist, int(NUM_PLOTS), DIST_WEIGHTS)
+# Create new df with these attributes
+# Username | Postal Code | lat | long | distance
+winner_df = pd.DataFrame(
+    columns=['S/N', 'Postal Code', 'Latitude', 'Longitude', 'Distance'])
+
+for i, w in enumerate(winners):
+    w_valid_row = valid_df.loc[valid_df['S/N'] == w]
+    p_code, lat, long = w_valid_row.iloc[0]['Postal Code'], w_valid_row.iloc[
+        0]['Latitude'], w_valid_row.iloc[0]['Longitude']
+    # print(f'{p_code} {lat} {long}')
+    winner_df.loc[i] = [w] + [p_code] + [lat] + [long] + [user_dist[w]]
+
+# print(winner_df)
+write_dataframe_to_excel(winner_df, FILENAME, "winner")

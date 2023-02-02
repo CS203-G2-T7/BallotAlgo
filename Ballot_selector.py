@@ -1,39 +1,49 @@
+import math
+# from dotenv import load_dotenv
 import random
 import ast
 import os
-from dotenv import load_dotenv
 
-# key is the distance, value is the number of additional tickets to be added
-load_dotenv()
-default_dist_weights = ast.literal_eval(os.environ.get("DEFAULT_DIST_WEIGHTS"))
+# load_dotenv()
+# DIST_WEIGHTS: dict = {0: 10, 1: 5, 5: 1}
+# 0 <= a < 1 : 10
+# 1 <= b < 5 : 5
+# 5 <= c     : 1
 
-def ballot_selector(user_dist: dict, num_plots: int, dist_weights: dict = default_dist_weights):
-    keyset_fixed = list(user_dist.keys())
-    keyset = list(user_dist.keys())
-    dict_keys = list(dist_weights.keys())
 
-    for i in range(0, len(keyset_fixed)):
-        idx = 0
-        while (user_dist.get(keyset_fixed[i]) > dict_keys[idx]):
-            if (idx < len(dict_keys) - 1):
-                idx += 1
-            else:
-                break
-        value = dist_weights.get(dict_keys[idx])
-        for j in range(value):
-            keyset.append(keyset_fixed[i])
+def ballot_selector(user_dist: dict, num_plots: int, dist_weights: dict):
+    user_pool: list = pool_generator(user_dist, dist_weights)
+    winners = rand_selector(user_pool, num_plots)
+    return winners
 
-    output = set()
-    for i in range(num_plots):
-        size = len(keyset)
-        idx = random.randint(0, size - 1)
-        winner = keyset[idx]
-        # print(winner)
-        output.add(winner)
-        keyset = [k for k in keyset if k != winner]
-    return output
+
+def pool_generator(user_dist: dict, dist_weights: dict) -> list:
+    user_pool: list = list(user_dist.keys())
+
+    for k, v in user_dist.items():  # iterate through users
+        w = get_weight(v, dist_weights)
+        for _ in range(w):
+            user_pool.append(k)
+    return user_pool
+
+
+def get_weight(dist: int, dist_weights: dict) -> int:
+    group: int = math.floor(dist)  # 3.14 -> 3
+    while group not in dist_weights:
+        group -= 1
+    return dist_weights[group]
+
+
+def rand_selector(pool: list, num: int) -> list:
+    selected = []
+    for _ in range(num):
+        rand_idx = random.randint(0, len(pool) - 1)
+        winner = pool[rand_idx]
+        selected.append(winner)
+        pool = [i for i in pool if i != winner]
+    return selected
 
 
 # user_dist = {'a': .4, 'b': 6, 'c': 4.1, 'd': 5.1, 'e': 0.9,
 #              'f': 1.01, 'g': 3.2, 'h': 4.99, 'i': 5.0, 'j': 100}
-# print(ballot_selector(user_dist, 5, default_dist_weights))
+# print(ballot_selector(user_dist, 5, DIST_WEIGHTS))
