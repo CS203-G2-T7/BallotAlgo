@@ -22,7 +22,6 @@ garden_lat, garden_long = garden_c.iloc[0]['Latitude'], garden_c.iloc[0]['Longit
 raw_df = read_excel_data_to_dataframe(FILENAME)
 valid_df = raw_df
 
-# Lat and long not found in df. Need to memoise.
 if raw_df.get('Latitude') is None or raw_df.get('Longitude') is None:
     valid_df = postal_to_lat_long(raw_df)
     write_dataframe_to_excel(valid_df, FILENAME)
@@ -36,8 +35,8 @@ for index, row in valid_df.iterrows():
                                                      garden_long, float(row.get('Latitude')), float(row.get('Longitude')))
 
 winners: list = ballot_selector(user_dist, int(NUM_PLOTS), DIST_WEIGHTS)
-# Create new df with these attributes
-# Username | Postal Code | lat | long | distance
+
+# Create df and write to excel
 winner_df = pd.DataFrame(
     columns=['S/N', 'Postal Code', 'Latitude', 'Longitude', 'Distance'])
 
@@ -45,8 +44,8 @@ for i, w in enumerate(winners):
     w_valid_row = valid_df.loc[valid_df['S/N'] == w]
     p_code, lat, long = w_valid_row.iloc[0]['Postal Code'], w_valid_row.iloc[
         0]['Latitude'], w_valid_row.iloc[0]['Longitude']
-    # print(f'{p_code} {lat} {long}')
     winner_df.loc[i] = [w] + [p_code] + [lat] + [long] + [user_dist[w]]
 
-# print(winner_df)
 write_dataframe_to_excel(winner_df, FILENAME, "winner")
+
+print(winner_df)
