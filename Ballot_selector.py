@@ -11,24 +11,24 @@ import os
 # 5 <= c     : 1
 
 
-def ballot_selector(user_dist: dict, num_plots: int, dist_weights: dict):
-    user_pool: list = pool_generator(user_dist, dist_weights)
+def ballot_selector(user_dist: dict, num_plots: int, dist_weights: dict, ceil: float):
+    user_pool: list = pool_generator(user_dist, dist_weights, ceil)
     winners = rand_selector(user_pool, num_plots)
     return winners
 
 
-def pool_generator(user_dist: dict, dist_weights: dict) -> list:
-    user_pool: list = list(user_dist.keys())
+def pool_generator(user_dist: dict, dist_weights: dict, ceil: float) -> list:
+    user_pool: list = []
 
     for k, v in user_dist.items():  # iterate through users
-        w = get_weight(v, dist_weights)
+        w = get_weight(v, dist_weights) if v <= ceil else 0
         for _ in range(w):
             user_pool.append(k)
     return user_pool
 
 
 def get_weight(dist: int, dist_weights: dict) -> int:
-    group: int = math.floor(dist)  # 3.14 -> 3
+    group: int = math.floor(dist)
     while group not in dist_weights:
         group -= 1
     return dist_weights[group]
@@ -36,11 +36,17 @@ def get_weight(dist: int, dist_weights: dict) -> int:
 
 def rand_selector(pool: list, num: int) -> list:
     selected = []
+    if len(pool) == 0:
+        print("Ceiling too low. No winners selected.")
+        return selected
     for _ in range(num):
         rand_idx = random.randint(0, len(pool) - 1)
         winner = pool[rand_idx]
         selected.append(winner)
         pool = [i for i in pool if i != winner]
+        if len(pool) == 0:
+            print("Ceiling too low. Not enough winners.")
+            break
     return selected
 
 

@@ -14,6 +14,7 @@ FILENAME = os.getenv("FILENAME")
 GARDEN = os.getenv("GARDEN")
 NUM_PLOTS = os.getenv("NUM_PLOTS")
 DIST_WEIGHTS = ast.literal_eval(os.getenv("DIST_WEIGHTS"))
+CEILING = float(os.getenv("CEILING"))
 
 garden_c_df = read_excel_data_to_dataframe("Garden_coordinates.xlsx")
 garden_c = garden_c_df.loc[garden_c_df['Garden'] == GARDEN]
@@ -38,7 +39,8 @@ valid_df = valid_df.assign(
     Distance=pd.Series(dist_col, dtype=pd.StringDtype()).values)
 write_dataframe_to_excel(valid_df, FILENAME)
 
-winners: list = ballot_selector(user_dist, int(NUM_PLOTS), DIST_WEIGHTS)
+winners: list = ballot_selector(
+    user_dist, int(NUM_PLOTS), DIST_WEIGHTS, CEILING)
 
 # Create df and write to excel
 winner_df = pd.DataFrame(
