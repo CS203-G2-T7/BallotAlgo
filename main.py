@@ -24,7 +24,6 @@ valid_df = raw_df
 
 if raw_df.get('Latitude') is None or raw_df.get('Longitude') is None:
     valid_df = postal_to_lat_long(raw_df)
-    write_dataframe_to_excel(valid_df, FILENAME)
 else:
     print("Latitude and longitude already cached.")
 
@@ -33,6 +32,11 @@ user_dist: dict = {}
 for index, row in valid_df.iterrows():
     user_dist[row.get('S/N')] = lat_long_to_distance(garden_lat,
                                                      garden_long, float(row.get('Latitude')), float(row.get('Longitude')))
+# Add dist column to excel
+dist_col = list(user_dist.values())
+valid_df = valid_df.assign(
+    Distance=pd.Series(dist_col, dtype=pd.StringDtype()).values)
+write_dataframe_to_excel(valid_df, FILENAME)
 
 winners: list = ballot_selector(user_dist, int(NUM_PLOTS), DIST_WEIGHTS)
 
